@@ -1,6 +1,6 @@
 # 老城哥呕心沥血 · 银行从业刷题
 
-> by 加班的金城（38岁，两个女儿）🌈
+> by 加班的金城（38岁，两个女儿）
 
 一个纯前端的银行从业资格考试刷题小程序，零依赖，浏览器直接打开即用。
 
@@ -56,7 +56,7 @@
 
 # Bank Practitioner Exam Prep
 
-> by Jincheng (working overtime on weekends) 🌈
+> by Jincheng (working overtime on weekends)
 
 A pure frontend quiz app for China Banking Professional Certification — zero dependencies, open in browser and start practicing.
 

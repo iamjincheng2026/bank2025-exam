@@ -135,6 +135,11 @@ body {
 .chip-recent .chip-title { color:#3498db; }
 .chip-recent.active .chip-title { color:#5dade2; }
 
+.chip-sprint { border-color:#e67e22; }
+.chip-sprint.active { border-color:#e67e22; background:rgba(230,126,34,.15); }
+.chip-sprint .chip-title { color:#e67e22; }
+.chip-sprint.active .chip-title { color:#f39c12; }
+
 .mode-cards { display:flex; flex-direction:column; gap:14px; }
 .mode-card {
   background: var(--card);
@@ -506,6 +511,7 @@ function getCategories() {
     { id: 'all', name: '全部题目', icon: '📚', type: '' },
     { id: 'freq', name: '🔥 高频必考', icon: '🔥', type: 'chip-freq', desc: '多年重复出现的真题' },
     { id: 'recent', name: '⚡ 近两年', icon: '⚡', type: 'chip-recent', desc: '2024+2025年真题' },
+    { id: 'sprint', name: '🎯 考前冲刺', icon: '🎯', type: 'chip-sprint', desc: '8套VIP冲刺题精选2套模拟卷' },
   ];
   // 年份（从2025到2018）
   for (let y = 2025; y >= 2018; y--) {
@@ -539,6 +545,9 @@ function getQuestionsByCategory(catId) {
   if (catId === 'freq') return pool.filter(q => q.categories && q.categories.includes('高频'));
   if (catId === 'recent') {
     return pool.filter(q => q.years && q.years.some(y => y === '2025' || y === '2024'));
+  }
+  if (catId === 'sprint') {
+    return pool.filter(q => q.categories && q.categories.includes('sprint'));
   }
   return pool.filter(q => q.categories && q.categories.includes(catId));
 }
@@ -618,6 +627,11 @@ function updateModeDesc() {
       el.textContent = '⚡ 近两年真题';
       el.style.background = 'rgba(52,152,219,.12)';
       el.style.color = '#3498db';
+    } else if (currentCategory === 'sprint') {
+      el.style.display = '';
+      el.textContent = '🎯 考前冲刺';
+      el.style.background = 'rgba(230,126,34,.12)';
+      el.style.color = '#e67e22';
     } else if (currentCategory !== 'all') {
       el.style.display = '';
       el.textContent = catName;

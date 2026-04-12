@@ -170,6 +170,17 @@ body {
   padding: 6px 10px;
   font-size: 13px;
 }
+.start-btn {
+  padding: 5px 16px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--primary), #e74c3c);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.start-btn:active { opacity:.7; }
 
 /* === 考试界面 === */
 .exam { max-width:800px; margin:0 auto; padding:20px; }
@@ -366,7 +377,7 @@ body {
 
   <!-- 模式选择 -->
   <div class="mode-cards">
-    <div class="mode-card" onclick="startExam('random')">
+    <div class="mode-card">
       <div class="icon">🎲</div>
       <div class="info">
         <h3>随机练习</h3>
@@ -375,11 +386,12 @@ body {
       </div>
       <div class="config">
         <select id="randomCount">
-          <option value="10">10题</option>
-          <option value="20" selected>20题</option>
-          <option value="30">30题</option>
+          <option value="20">20题</option>
+          <option value="30" selected>30题</option>
           <option value="50">50题</option>
+          <option value="80">80题</option>
         </select>
+        <button class="start-btn" onclick="event.stopPropagation();startExam('random')">开始</button>
       </div>
     </div>
 
@@ -392,7 +404,7 @@ body {
       </div>
     </div>
 
-    <div class="mode-card" onclick="startExam('exam')">
+    <div class="mode-card">
       <div class="icon">📝</div>
       <div class="info">
         <h3>模拟考试</h3>
@@ -405,6 +417,7 @@ body {
           <option value="80" selected>80题</option>
           <option value="100">100题</option>
         </select>
+        <button class="start-btn" onclick="event.stopPropagation();startExam('exam')">开始</button>
       </div>
     </div>
 

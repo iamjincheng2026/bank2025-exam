@@ -10,6 +10,7 @@ A pure frontend quiz app for China Banking Professional Certification — zero d
 
 - **Three practice modes**: Sequential, Mock Exam, Random Practice
 - **Smart categorization**: By subject (Laws & Regulations / Personal Loans) + by year (2018-2025) + High-frequency + Sprint
+- **Exam countdown**: Countdown splash page to the exam date
 - **Intelligent ordering**: Sequential & Mock Exam auto-sort by Single → Multiple → True/False for better retention
 - **Question type filter**: Random Practice supports filtering by question type or focusing on wrong answers
 - **Wrong answer tracking**: Auto-record mistakes with dedicated review mode
@@ -55,6 +56,7 @@ All questions are collected from the internet for personal study purposes only.
 
 - **三大刷题模式**：顺序刷题、模拟考试、随机练习
 - **题库分类**：按科目（法律法规/个人贷款）+ 按年份（2018-2025）+ 高频必考 + 考前冲刺
+- **考试倒计时**：开屏倒计时页面，显示距考试剩余时间
 - **智能排序**：顺序刷题和模拟考试自动按 单选→多选→判断 排序，便于记忆
 - **题型筛选**：随机练习支持只练单选/多选/判断，或专攻错题
 - **错题记录**：自动记录错题，支持错题重练
@@ -86,6 +88,8 @@ All questions are collected from the internet for personal study purposes only.
 
 | 版本 | 日期 | 更新内容 |
 |------|------|----------|
+| v2.10 | 20260412 | 移除"全部科目"，精简为法律法规/个人贷款双科目 |
+| v2.09 | 20260412 | 倒计时手机适配优化，鼓励语分两行 |
 | v2.0 | 20260412 | 作者署名简化为"金城" |
 | v1.99 | 20260412 | "呕心沥血"全部替换为"加班制作" |
 | v1.98 | 20260412 | 作者署名渐变色调整（最终版） |

@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>银行从业 · 刷题</title>
+<script src="exam_data.js"></script>
+<style>
+:root {
+  --primary: #e74c3c;
+  --primary-light: #ff6b6b;
+  --success: #27ae60;
+  --success-light: #2ecc71;
+  --warning: #f39c12;
+  --danger: #e74c3c;
+  --bg: #0f1923;
+  --bg2: #1a2332;
+  --card: #1e2d3d;
+  --border: #2c3e50;
+  --text: #ecf0f1;
+  --text2: #95a5a6;
+  --text3: #7f8c8d;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  line-height: 1.6;
+}
+.hidden { display:none!important; }
+
+/* === 首页 === */
+.home {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+.home h1 {
+  text-align: center;
+  font-size: 28px;
+  margin: 30px 0 5px;
+  background: linear-gradient(135deg, var(--primary), var(--warning));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.home .sub { text-align:center; color:var(--text2); margin-bottom:24px; font-size:14px; }
+
+/* 科目切换 */
+.subject-tabs {
+  display: flex; gap: 0; justify-content: center; margin-bottom: 24px;
+  background: var(--bg2); border-radius: 12px; padding: 4px; max-width: 500px; margin-left: auto; margin-right: auto;
+}
+.subject-tab {
+  flex: 1; padding: 12px 16px; border-radius: 10px; text-align: center;
+  cursor: pointer; transition: all .2s; font-size: 15px; font-weight: 600;
+  color: var(--text2);
+}
+.subject-tab:hover { color: var(--text); }
+.subject-tab.active {
+  background: var(--card); color: var(--primary-light);
+  box-shadow: 0 2px 10px rgba(0,0,0,.3);
+}
+
+.stats-row {
+  display: flex; gap:12px; justify-content:center; margin-bottom:20px; flex-wrap:wrap;
+}
+.stat-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 24px;
+  text-align: center;
+  min-width: 100px;
+}
+.stat-card .num { font-size:28px; font-weight:700; }
+.stat-card .num.red { color:var(--primary); }
+.stat-card .num.green { color:var(--success); }
+.stat-card .num.yellow { color:var(--warning); }
+.stat-card .num.blue { color:#3498db; }
+.stat-card .num.purple { color:#9b59b6; }
+.stat-card .num.cyan { color:#1abc9c; }
+.stat-card .label { font-size:12px; color:var(--text2); margin-top:4px; }
+
+/* === 题库分类选择 === */
+.category-section {
+  margin-bottom: 24px;
+}
+.category-section h2 {
+  font-size: 18px;
+  margin-bottom: 12px;
+  color: var(--text2);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.category-section h2::before {
+  content: '';
+  display: inline-block;
+  width: 4px;
+  height: 18px;
+  background: var(--primary);
+  border-radius: 2px;
+}
+.category-chips {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.chip {
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  cursor: pointer;
+  transition: all .2s;
+  text-align: center;
+  min-width: 90px;
+}
+.chip:hover { border-color:var(--primary); }
+.chip.active { border-color:var(--primary); background:rgba(231,76,60,.15); }
+.chip .chip-title { font-size:14px; font-weight:600; }
+.chip .chip-count { font-size:12px; color:var(--text2); margin-top:2px; }
+.chip.active .chip-title { color:var(--primary-light); }
+
+.chip-freq { border-color:#9b59b6; }
+.chip-freq.active { border-color:#9b59b6; background:rgba(155,89,182,.15); }
+.chip-freq .chip-title { color:#9b59b6; }
+.chip-freq.active .chip-title { color:#bb77dd; }
+
+.chip-recent { border-color:#3498db; }
+.chip-recent.active { border-color:#3498db; background:rgba(52,152,219,.15); }
+.chip-recent .chip-title { color:#3498db; }
+.chip-recent.active .chip-title { color:#5dade2; }
+
+.mode-cards { display:flex; flex-direction:column; gap:14px; }
+.mode-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 20px 24px;
+  cursor: pointer;
+  transition: all .2s;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.mode-card:hover { border-color:var(--primary); transform:translateY(-2px); box-shadow:0 4px 20px rgba(231,76,60,.15); }
+.mode-card .icon { font-size:36px; width:60px; text-align:center; }
+.mode-card .info h3 { font-size:17px; margin-bottom:4px; }
+.mode-card .info p { font-size:13px; color:var(--text2); }
+.mode-card .info .cat-badge {
+  display:inline-block; padding:2px 8px; border-radius:4px;
+  font-size:11px; font-weight:600; margin-top:4px;
+}
+.mode-card .config {
+  margin-left: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.mode-card .config select {
+  background: var(--bg2);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 13px;
+}
+
+/* === 考试界面 === */
+.exam { max-width:800px; margin:0 auto; padding:20px; }
+
+.top-bar {
+  display:flex; justify-content:space-between; align-items:center;
+  background:var(--card); border:1px solid var(--border);
+  border-radius:12px; padding:12px 20px; margin-bottom:20px;
+  flex-wrap:wrap; gap:10px;
+}
+.top-bar .timer { font-size:20px; font-weight:700; color:var(--warning); font-variant-numeric:tabular-nums; }
+.top-bar .progress { font-size:14px; color:var(--text2); }
+.top-bar .cat-info { font-size:13px; color:var(--text3); }
+.top-bar .subject-info { font-size:12px; color:var(--text3); background:var(--bg2); padding:2px 8px; border-radius:4px; }
+.top-bar .btn-sm {
+  background:var(--bg2); color:var(--text2); border:1px solid var(--border);
+  border-radius:8px; padding:6px 14px; font-size:13px; cursor:pointer;
+}
+.top-bar .btn-sm:hover { color:var(--text); border-color:var(--text2); }
+
+.question-card {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:14px; padding:24px; margin-bottom:16px;
+}
+.q-header {
+  display:flex; justify-content:space-between; align-items:center;
+  margin-bottom:12px; flex-wrap: wrap; gap: 6px;
+}
+.q-num { font-size:13px; color:var(--text3); }
+.q-badges { display:flex; gap:6px; align-items:center; flex-wrap:wrap; }
+.q-type {
+  font-size:12px; padding:3px 10px; border-radius:20px;
+  font-weight:600;
+}
+.q-type.single { background:rgba(231,76,60,.15); color:var(--primary); }
+.q-type.multi { background:rgba(243,156,18,.15); color:var(--warning); }
+.q-type.judge { background:rgba(52,152,219,.15); color:#3498db; }
+
+.q-years {
+  display:inline-block; font-size:11px; padding:2px 8px; border-radius:10px;
+  background:rgba(155,89,182,.12); color:#bb77dd;
+}
+.q-freq-badge {
+  display:inline-block; font-size:11px; padding:2px 8px; border-radius:10px;
+  background:rgba(231,76,60,.12); color:var(--primary-light); font-weight:600;
+}
+.q-subject-badge {
+  display:inline-block; font-size:11px; padding:2px 8px; border-radius:10px;
+  background:rgba(26,188,156,.12); color:#1abc9c;
+}
+
+.q-text { font-size:16px; line-height:1.8; margin-bottom:20px; }
+
+.options { display:flex; flex-direction:column; gap:10px; }
+.option {
+  background:var(--bg2); border:2px solid transparent;
+  border-radius:10px; padding:14px 18px;
+  cursor:pointer; transition:all .15s;
+  display:flex; align-items:flex-start; gap:12px;
+  font-size:15px;
+}
+.option:hover { border-color:var(--border); background:var(--card); }
+.option.selected { border-color:var(--primary); background:rgba(231,76,60,.08); }
+.option.correct { border-color:var(--success)!important; background:rgba(39,174,96,.1)!important; }
+.option.wrong { border-color:var(--danger)!important; background:rgba(231,76,60,.1)!important; }
+.option .label {
+  width:28px; height:28px; border-radius:50%;
+  background:var(--border); display:flex; align-items:center; justify-content:center;
+  font-size:13px; font-weight:700; flex-shrink:0;
+}
+.option.selected .label { background:var(--primary); }
+.option.correct .label { background:var(--success); }
+.option.wrong .label { background:var(--danger); }
+
+.explanation {
+  margin-top:16px; padding:16px; border-radius:10px;
+  background:rgba(52,152,219,.08); border-left:3px solid #3498db;
+  font-size:14px; line-height:1.7; color:var(--text2);
+  display:none;
+}
+.explanation.show { display:block; }
+.explanation strong { color:var(--text); }
+
+.nav-btns {
+  display:flex; gap:12px; margin-top:20px; flex-wrap:wrap;
+}
+.btn {
+  flex:1; padding:14px 20px; border:none; border-radius:10px;
+  font-size:15px; font-weight:600; cursor:pointer; transition:all .15s;
+  text-align:center;
+}
+.btn:disabled { opacity:.4; cursor:not-allowed; }
+.btn-primary { background:var(--primary); color:#fff; }
+.btn-primary:hover:not(:disabled) { background:var(--primary-light); }
+.btn-success { background:var(--success); color:#fff; }
+.btn-success:hover:not(:disabled) { background:var(--success-light); }
+.btn-outline { background:transparent; color:var(--text2); border:1px solid var(--border); }
+.btn-outline:hover { color:var(--text); border-color:var(--text2); }
+
+/* === 答题卡 === */
+.answer-sheet {
+  margin-top:20px; background:var(--card); border:1px solid var(--border);
+  border-radius:14px; padding:20px; display:none;
+}
+.answer-sheet.show { display:block; }
+.answer-sheet h3 { font-size:16px; margin-bottom:14px; }
+.sheet-grid {
+  display:flex; flex-wrap:wrap; gap:8px;
+}
+.sheet-dot {
+  width:36px; height:36px; border-radius:8px;
+  background:var(--bg2); border:1px solid var(--border);
+  display:flex; align-items:center; justify-content:center;
+  font-size:12px; cursor:pointer; transition:all .15s;
+}
+.sheet-dot:hover { border-color:var(--text2); }
+.sheet-dot.current { border-color:var(--primary); color:var(--primary); font-weight:700; }
+.sheet-dot.answered { background:var(--primary); color:#fff; border-color:var(--primary); }
+.sheet-dot.correct-dot { background:var(--success); color:#fff; border-color:var(--success); }
+.sheet-dot.wrong-dot { background:var(--danger); color:#fff; border-color:var(--danger); }
+
+/* === 结果页 === */
+.result {
+  max-width:700px; margin:0 auto; padding:20px; text-align:center;
+}
+.result h1 { font-size:32px; margin:30px 0 10px; }
+.result .score { font-size:72px; font-weight:800; margin:20px 0; font-variant-numeric:tabular-nums; }
+.result .score.pass { color:var(--success); }
+.result .score.fail { color:var(--danger); }
+.result .detail { font-size:16px; color:var(--text2); margin-bottom:30px; }
+.result-stats {
+  display:flex; gap:16px; justify-content:center; margin-bottom:30px; flex-wrap:wrap;
+}
+.result-chart {
+  width:100%; max-width:400px; margin:0 auto 30px;
+}
+.bar-row { display:flex; align-items:center; margin-bottom:10px; }
+.bar-label { width:60px; text-align:right; font-size:13px; color:var(--text2); margin-right:10px; }
+.bar-track { flex:1; height:24px; background:var(--bg2); border-radius:6px; overflow:hidden; }
+.bar-fill { height:100%; border-radius:6px; transition:width 1s ease; display:flex; align-items:center; padding-left:8px; font-size:12px; font-weight:600; }
+.bar-fill.green { background:var(--success); color:#fff; }
+.bar-fill.red { background:var(--danger); color:#fff; }
+.bar-fill.yellow { background:var(--warning); color:#fff; }
+
+.wrong-review { margin-top:30px; text-align:left; }
+.wrong-review h3 { font-size:18px; margin-bottom:16px; color:var(--primary); }
+.wrong-item {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:10px; padding:16px; margin-bottom:12px;
+}
+.wrong-item .q-text { font-size:14px; margin-bottom:8px; line-height:1.6; }
+.wrong-item .your-ans { font-size:13px; color:var(--danger); }
+.wrong-item .right-ans { font-size:13px; color:var(--success); }
+.wrong-item .exp { font-size:13px; color:var(--text2); margin-top:6px; padding-top:6px; border-top:1px solid var(--border); }
+
+.fade-in { animation: fadeIn .3s ease; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+
+@media(max-width:600px) {
+  .home h1 { font-size:22px; }
+  .stat-card { min-width:80px; padding:12px 16px; }
+  .stat-card .num { font-size:22px; }
+  .chip { min-width:70px; padding:8px 12px; }
+  .chip .chip-title { font-size:13px; }
+  .mode-card { padding:16px; }
+  .mode-card .icon { display:none; }
+}
+</style>
+</head>
+<body>
+
+<!-- 首页 -->
+<div class="home" id="homePage">
+  <h1>🏦 银行从业 · 刷题</h1>
+  <p class="sub">初级 | 法律法规 + 个人贷款 | 2018-2025年真题 | 去重后题库</p>
+
+  <!-- 科目切换 -->
+  <div class="subject-tabs" id="subjectTabs"></div>
+
+  <div class="stats-row" id="statsRow">
+    <div class="stat-card"><div class="num red" id="statTotal">0</div><div class="label">总题库</div></div>
+    <div class="stat-card"><div class="num green" id="statSingle">0</div><div class="label">单选题</div></div>
+    <div class="stat-card"><div class="num yellow" id="statMulti">0</div><div class="label">多选题</div></div>
+    <div class="stat-card"><div class="num blue" id="statJudge">0</div><div class="label">判断题</div></div>
+    <div class="stat-card"><div class="num purple" id="statFreq">0</div><div class="label">高频题</div></div>
+  </div>
+
+  <!-- 题库分类 -->
+  <div class="category-section">
+    <h2>📚 选择题库范围</h2>
+    <div class="category-chips" id="categoryChips"></div>
+  </div>
+
+  <!-- 模式选择 -->
+  <div class="mode-cards">
+    <div class="mode-card" onclick="startExam('random')">
+      <div class="icon">🎲</div>
+      <div class="info">
+        <h3>随机练习</h3>
+        <p id="randomDesc">从题库中随机抽取题目，答完即看解析</p>
+        <div class="cat-badge" id="randomBadge" style="display:none"></div>
+      </div>
+      <div class="config">
+        <select id="randomCount">
+          <option value="10">10题</option>
+          <option value="20" selected>20题</option>
+          <option value="30">30题</option>
+          <option value="50">50题</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="mode-card" onclick="startExam('sequential')">
+      <div class="icon">📖</div>
+      <div class="info">
+        <h3>顺序刷题</h3>
+        <p id="seqDesc">按顺序逐题练习</p>
+        <div class="cat-badge" id="seqBadge" style="display:none"></div>
+      </div>
+    </div>
+
+    <div class="mode-card" onclick="startExam('exam')">
+      <div class="icon">📝</div>
+      <div class="info">
+        <h3>模拟考试</h3>
+        <p id="examDesc">限时120分钟，交卷后统一评分</p>
+        <div class="cat-badge" id="examBadge" style="display:none"></div>
+      </div>
+      <div class="config">
+        <select id="examCount">
+          <option value="60">60题</option>
+          <option value="80" selected>80题</option>
+          <option value="100">100题</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="mode-card" onclick="startExam('wrong')">
+      <div class="icon">🔄</div>
+      <div class="info">
+        <h3>错题重练</h3>
+        <p id="wrongCount">暂无错题，去刷题吧</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 考试页 -->
+<div class="exam hidden" id="examPage">
+  <div class="top-bar">
+    <div>
+      <div class="timer" id="timer">🎯 练习模式</div>
+      <div class="progress" id="progressBar">1 / 10</div>
+      <div class="subject-info" id="subjectInfo"></div>
+    </div>
+    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+      <span class="cat-info" id="catInfo"></span>
+      <button class="btn-sm" onclick="toggleSheet()">📋 答题卡</button>
+      <button class="btn-sm" onclick="goHome()">🏠 首页</button>
+    </div>
+  </div>
+
+  <div class="question-card fade-in" id="questionCard">
+    <div class="q-header">
+      <span class="q-num" id="qNum">第 1 题</span>
+      <div class="q-badges">
+        <span class="q-type" id="qType">单选</span>
+        <span class="q-subject-badge" id="qSubject" style="display:none"></span>
+        <span class="q-years" id="qYears" style="display:none"></span>
+        <span class="q-freq-badge" id="qFreqBadge" style="display:none"></span>
+      </div>
+    </div>
+    <div class="q-text" id="qText"></div>
+    <div class="options" id="options"></div>
+    <div class="explanation" id="explanation"></div>
+  </div>
+
+  <div class="nav-btns">
+    <button class="btn btn-outline" id="prevBtn" onclick="prevQ()" disabled>⬅ 上一题</button>
+    <button class="btn btn-success" id="confirmBtn" onclick="confirmAnswer()" style="display:none">✅ 确认提交</button>
+    <button class="btn btn-primary" id="nextBtn" onclick="nextQ()">下一题 ➡</button>
+    <button class="btn btn-primary" id="submitBtn" onclick="submitExam()" style="display:none">📥 交卷</button>
+  </div>
+
+  <div class="answer-sheet" id="answerSheet">
+    <h3>📋 答题卡</h3>
+    <div class="sheet-grid" id="sheetGrid"></div>
+  </div>
+</div>
+
+<!-- 结果页 -->
+<div class="result hidden" id="resultPage">
+  <h1 id="resultTitle">练习完成！</h1>
+  <div class="score" id="scoreDisplay">0</div>
+  <div class="detail" id="resultDetail"></div>
+  <div class="result-chart" id="resultChart"></div>
+  <div class="nav-btns" style="max-width:400px;margin:0 auto 30px">
+    <button class="btn btn-outline" onclick="goHome()">🏠 返回首页</button>
+    <button class="btn btn-primary" id="retryBtn" onclick="retryWrong()" style="display:none">🔄 重练错题</button>
+  </div>
+  <div class="wrong-review hidden" id="wrongReview">
+    <h3>❌ 错题回顾</h3>
+    <div id="wrongList"></div>
+  </div>
+</div>
+
+<script>
+// === 科目定义 ===
+const SUBJECTS = [
+  { id: 'all', name: '全部科目', emoji: '📚' },
+  { id: '法律法规', name: '法律法规', emoji: '⚖️' },
+  { id: '个人贷款', name: '个人贷款', emoji: '🏦' }
+];
+
+let currentSubject = 'all';
+
+// === 动态生成分类 ===
+function getCategories() {
+  const base = [
+    { id: 'all', name: '全部题目', icon: '📚', type: '' },
+    { id: 'freq', name: '🔥 高频必考', icon: '🔥', type: 'chip-freq', desc: '多年重复出现的真题' },
+    { id: 'recent', name: '⚡ 近两年', icon: '⚡', type: 'chip-recent', desc: '2024+2025年真题' },
+  ];
+  // 年份（从2025到2018）
+  for (let y = 2025; y >= 2018; y--) {
+    base.push({ id: String(y), name: y + '年', icon: '', type: '' });
+  }
+  return base;
+}
+
+let currentCategory = 'all';
+
+// === 状态 ===
+let mode = 'random';
+let questions = [];
+let currentIdx = 0;
+let userAnswers = [];
+let isExam = false;
+let timerInterval = null;
+let timeLeft = 0;
+let startTime = 0;
+
+// === 获取当前科目的全部题目 ===
+function getSubjectQuestions() {
+  if (currentSubject === 'all') return [...EXAM_DATA];
+  return EXAM_DATA.filter(q => q.subject === currentSubject);
+}
+
+// === 获取分类下的题目 ===
+function getQuestionsByCategory(catId) {
+  let pool = getSubjectQuestions();
+  if (catId === 'all') return pool;
+  if (catId === 'freq') return pool.filter(q => q.categories && q.categories.includes('高频'));
+  if (catId === 'recent') {
+    return pool.filter(q => q.years && q.years.some(y => y === '2025' || y === '2024'));
+  }
+  return pool.filter(q => q.categories && q.categories.includes(catId));
+}
+
+// === 渲染科目切换 ===
+function renderSubjectTabs() {
+  const el = document.getElementById('subjectTabs');
+  el.innerHTML = SUBJECTS.map(s => {
+    const cls = s.id === currentSubject ? 'subject-tab active' : 'subject-tab';
+    return `<div class="${cls}" onclick="selectSubject('${s.id}')">${s.emoji} ${s.name}</div>`;
+  }).join('');
+}
+
+function selectSubject(id) {
+  currentSubject = id;
+  currentCategory = 'all';
+  initHome();
+}
+
+// === 初始化首页 ===
+function initHome() {
+  renderSubjectTabs();
+
+  // 统计
+  const allQ = getQuestionsByCategory('all');
+  const freqQ = getQuestionsByCategory('freq');
+  document.getElementById('statTotal').textContent = allQ.length;
+  document.getElementById('statSingle').textContent = allQ.filter(q => q.type === '单项选择题').length;
+  document.getElementById('statMulti').textContent = allQ.filter(q => q.type === '多项选择题').length;
+  document.getElementById('statJudge').textContent = allQ.filter(q => q.type === '判断题').length;
+  document.getElementById('statFreq').textContent = freqQ.length;
+
+  // 渲染分类chips
+  const cats = getCategories();
+  const chipsEl = document.getElementById('categoryChips');
+  chipsEl.innerHTML = cats.map(cat => {
+    const count = getQuestionsByCategory(cat.id).length;
+    if (count === 0) return '';
+    let cls = 'chip';
+    if (cat.type) cls += ' ' + cat.type;
+    if (cat.id === currentCategory) cls += ' active';
+    return `<div class="${cls}" onclick="selectCategory('${cat.id}')">
+      <div class="chip-title">${cat.icon} ${cat.name}</div>
+      <div class="chip-count">${count}题</div>
+    </div>`;
+  }).join('');
+
+  updateModeDesc();
+  updateWrongUI();
+}
+
+function selectCategory(catId) {
+  currentCategory = catId;
+  initHome();
+}
+
+function updateModeDesc() {
+  const catObj = getCategories().find(c => c.id === currentCategory);
+  const catName = catObj ? catObj.name : '';
+  const count = getQuestionsByCategory(currentCategory).length;
+  const subName = currentSubject === 'all' ? '' : `「${SUBJECTS.find(s => s.id === currentSubject).name}」`;
+
+  document.getElementById('randomDesc').textContent = `从${subName}「${catName}」(${count}题)中随机抽取`;
+  document.getElementById('seqDesc').textContent = `${subName}「${catName}」按顺序逐题练习`;
+  document.getElementById('examDesc').textContent = `${subName}「${catName}」限时120分钟，交卷后统一评分`;
+
+  // badge
+  ['randomBadge', 'seqBadge', 'examBadge'].forEach(id => {
+    const el = document.getElementById(id);
+    if (currentCategory === 'freq') {
+      el.style.display = '';
+      el.textContent = '🔥 高频必考';
+      el.style.background = 'rgba(231,76,60,.12)';
+      el.style.color = '#e74c3c';
+    } else if (currentCategory === 'recent') {
+      el.style.display = '';
+      el.textContent = '⚡ 近两年真题';
+      el.style.background = 'rgba(52,152,219,.12)';
+      el.style.color = '#3498db';
+    } else if (currentCategory !== 'all') {
+      el.style.display = '';
+      el.textContent = catName;
+      el.style.background = 'rgba(155,89,182,.12)';
+      el.style.color = '#bb77dd';
+    } else {
+      el.style.display = 'none';
+    }
+  });
+}
+
+// === localStorage 错题（按科目分开） ===
+function getWrongKey() { return 'bank_wrong_v3_' + currentSubject; }
+function loadWrong() {
+  try { return JSON.parse(localStorage.getItem(getWrongKey()) || '[]'); }
+  catch { return []; }
+}
+function saveWrong(arr) {
+  localStorage.setItem(getWrongKey(), JSON.stringify(arr));
+}
+function updateWrongUI() {
+  const w = loadWrong();
+  document.getElementById('wrongCount').textContent = w.length > 0 ? `共${w.length}道错题待重练` : '暂无错题，去刷题吧';
+}
+
+// === 工具函数 ===
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function showPage(id) {
+  document.querySelectorAll('.home,.exam,.result').forEach(p => p.classList.add('hidden'));
+  document.getElementById(id).classList.remove('hidden');
+}
+
+// === 开始考试 ===
+function startExam(m) {
+  mode = m;
+  let pool;
+
+  if (m === 'wrong') {
+    const wrongIds = loadWrong();
+    if (wrongIds.length === 0) { alert('暂无错题！'); return; }
+    pool = getSubjectQuestions().filter(q => wrongIds.includes(q.question));
+    pool = shuffle(pool);
+    isExam = false;
+  } else {
+    pool = getQuestionsByCategory(currentCategory);
+  }
+
+  if (pool.length === 0) { alert('该分类暂无题目！'); return; }
+
+  if (m === 'random') {
+    const count = parseInt(document.getElementById('randomCount').value);
+    questions = shuffle(pool).slice(0, count);
+    isExam = false;
+  } else if (m === 'sequential') {
+    questions = [...pool];
+    isExam = false;
+  } else if (m === 'exam') {
+    const count = parseInt(document.getElementById('examCount').value);
+    const selected = shuffle(pool);
+    const singles = selected.filter(q => q.type === '单项选择题');
+    const multis = selected.filter(q => q.type === '多项选择题');
+    const judges = selected.filter(q => q.type === '判断题');
+    const sCount = Math.min(Math.round(count * 0.65), singles.length);
+    const mCount = Math.min(Math.round(count * 0.25), multis.length);
+    const jCount = Math.min(count - sCount - mCount, judges.length);
+    questions = [...singles.slice(0, sCount), ...multis.slice(0, mCount), ...judges.slice(0, jCount)];
+    questions = shuffle(questions);
+    isExam = true;
+    timeLeft = 120 * 60;
+    startTimer();
+  }
+
+  startTime = Date.now();
+  currentIdx = 0;
+  userAnswers = new Array(questions.length).fill(null);
+
+  // 显示分类和科目信息
+  const catObj = getCategories().find(c => c.id === currentCategory);
+  document.getElementById('catInfo').textContent = catObj ? catObj.name : '';
+
+  const subObj = SUBJECTS.find(s => s.id === currentSubject);
+  const subjectInfoEl = document.getElementById('subjectInfo');
+  if (currentSubject !== 'all' && subObj) {
+    subjectInfoEl.textContent = subObj.emoji + ' ' + subObj.name;
+    subjectInfoEl.style.display = '';
+  } else {
+    subjectInfoEl.style.display = 'none';
+  }
+
+  showPage('examPage');
+  renderQuestion();
+  renderSheet();
+  updateNav();
+}
+
+function startTimer() {
+  clearInterval(timerInterval);
+  updateTimerDisplay();
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    updateTimerDisplay();
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      submitExam();
+    }
+  }, 1000);
+}
+
+function updateTimerDisplay() {
+  const m = Math.floor(timeLeft / 60);
+  const s = timeLeft % 60;
+  document.getElementById('timer').textContent = `⏱ ${m}:${String(s).padStart(2, '0')}`;
+}
+
+// === 渲染题目 ===
+function renderQuestion() {
+  const q = questions[currentIdx];
+  const total = questions.length;
+
+  document.getElementById('qNum').textContent = `第 ${currentIdx + 1} 题`;
+  document.getElementById('progressBar').textContent = `${currentIdx + 1} / ${total}`;
+  document.getElementById('qText').textContent = q.question;
+
+  // 题型标签
+  const typeEl = document.getElementById('qType');
+  if (q.type === '单项选择题') { typeEl.textContent = '单选'; typeEl.className = 'q-type single'; }
+  else if (q.type === '多项选择题') { typeEl.textContent = '多选'; typeEl.className = 'q-type multi'; }
+  else { typeEl.textContent = '判断'; typeEl.className = 'q-type judge'; }
+
+  // 科目标签（全部科目模式才显示）
+  const subjEl = document.getElementById('qSubject');
+  if (currentSubject === 'all' && q.subject) {
+    subjEl.style.display = '';
+    subjEl.textContent = q.subject;
+  } else {
+    subjEl.style.display = 'none';
+  }
+
+  // 年份标签
+  const yearsEl = document.getElementById('qYears');
+  if (q.years && q.years.length > 0) {
+    yearsEl.style.display = '';
+    yearsEl.textContent = q.years.join(' / ');
+  } else {
+    yearsEl.style.display = 'none';
+  }
+
+  // 高频标签
+  const freqEl = document.getElementById('qFreqBadge');
+  if (q.categories && q.categories.includes('高频')) {
+    freqEl.style.display = '';
+    freqEl.textContent = `🔥 出现${q.years.length}次`;
+  } else {
+    freqEl.style.display = 'none';
+  }
+
+  // 选项
+  const optDiv = document.getElementById('options');
+  const isMulti = q.type === '多项选择题';
+  const answered = userAnswers[currentIdx];
+  const showResult = !isExam && answered !== null;
+
+  optDiv.innerHTML = q.options.map(opt => {
+    let cls = 'option';
+    if (isMulti && Array.isArray(answered) && answered.includes(opt.label)) cls += ' selected';
+    else if (!isMulti && answered === opt.label) cls += ' selected';
+
+    if (showResult) {
+      if (q.correctLetters.includes(opt.label)) cls += ' correct';
+      if (answered === opt.label || (Array.isArray(answered) && answered.includes(opt.label))) {
+        if (!q.correctLetters.includes(opt.label)) cls += ' wrong';
+      }
+    }
+
+    return `<div class="${cls}" onclick="selectOption('${opt.label}')" data-label="${opt.label}">
+      <span class="label">${opt.label}</span>
+      <span>${opt.text}</span>
+    </div>`;
+  }).join('');
+
+  // 解析
+  const expEl = document.getElementById('explanation');
+  if (showResult && q.explanation) {
+    expEl.innerHTML = `<strong>📝 解析：</strong>${q.explanation}`;
+    expEl.classList.add('show');
+  } else {
+    expEl.classList.remove('show');
+    expEl.innerHTML = '';
+  }
+
+  // 动画
+  document.getElementById('questionCard').classList.remove('fade-in');
+  void document.getElementById('questionCard').offsetWidth;
+  document.getElementById('questionCard').classList.add('fade-in');
+
+  // 更新答题卡高亮
+  document.querySelectorAll('.sheet-dot').forEach((d, i) => {
+    d.classList.toggle('current', i === currentIdx);
+  });
+}
+
+// === 选择选项 ===
+function selectOption(label) {
+  const q = questions[currentIdx];
+  const isMulti = q.type === '多项选择题';
+
+  if (userAnswers[currentIdx] !== null && !isExam) return;
+
+  if (isMulti) {
+    let arr = Array.isArray(userAnswers[currentIdx]) ? [...userAnswers[currentIdx]] : [];
+    if (arr.includes(label)) arr = arr.filter(l => l !== label);
+    else arr.push(label);
+    arr.sort();
+    userAnswers[currentIdx] = arr.length > 0 ? arr : null;
+  } else {
+    userAnswers[currentIdx] = label;
+  }
+
+  if (!isExam) {
+    renderQuestion();
+    recordWrong();
+  } else {
+    renderQuestion();
+  }
+
+  updateNav();
+  updateSheetDot(currentIdx);
+}
+
+function confirmAnswer() {
+  renderQuestion();
+  recordWrong();
+  updateSheetDot(currentIdx);
+}
+
+// === 导航 ===
+function prevQ() { if (currentIdx > 0) { currentIdx--; renderQuestion(); updateNav(); } }
+function nextQ() {
+  if (currentIdx < questions.length - 1) {
+    currentIdx++;
+    renderQuestion();
+    updateNav();
+  } else {
+    submitExam();
+  }
+}
+
+function updateNav() {
+  const total = questions.length;
+  document.getElementById('prevBtn').disabled = currentIdx === 0;
+  document.getElementById('nextBtn').style.display = currentIdx < total - 1 ? '' : 'none';
+  document.getElementById('submitBtn').style.display = currentIdx === total - 1 ? '' : 'none';
+
+  if (isExam) {
+    const q = questions[currentIdx];
+    if (q.type === '多项选择题' && userAnswers[currentIdx] !== null) {
+      document.getElementById('confirmBtn').style.display = '';
+    } else {
+      document.getElementById('confirmBtn').style.display = 'none';
+    }
+  } else {
+    document.getElementById('confirmBtn').style.display = 'none';
+    document.getElementById('submitBtn').style.display = currentIdx === total - 1 ? '' : 'none';
+  }
+
+  if (!isExam) document.getElementById('timer').textContent = '🎯 练习模式';
+}
+
+// === 答题卡 ===
+function renderSheet() {
+  const grid = document.getElementById('sheetGrid');
+  grid.innerHTML = questions.map((q, i) => {
+    let cls = 'sheet-dot';
+    if (userAnswers[i] !== null) cls += ' answered';
+    if (i === currentIdx) cls += ' current';
+    return `<div class="${cls}" onclick="jumpTo(${i})">${i + 1}</div>`;
+  }).join('');
+}
+
+function updateSheetDot(idx) {
+  const dots = document.querySelectorAll('.sheet-dot');
+  if (dots[idx]) {
+    dots[idx].classList.add('answered');
+    dots[idx].classList.add('current');
+  }
+}
+
+function toggleSheet() {
+  document.getElementById('answerSheet').classList.toggle('show');
+}
+
+function jumpTo(idx) {
+  currentIdx = idx;
+  renderQuestion();
+  updateNav();
+}
+
+// === 记录错题 ===
+function recordWrong() {
+  const q = questions[currentIdx];
+  const ans = userAnswers[currentIdx];
+  if (ans === null) return;
+
+  let isCorrect;
+  if (Array.isArray(ans)) {
+    isCorrect = ans.length === q.correctLetters.length && ans.every(l => q.correctLetters.includes(l));
+  } else {
+    isCorrect = ans === q.answer;
+  }
+
+  let wrong = loadWrong();
+  if (!isCorrect) {
+    if (!wrong.includes(q.question)) wrong.push(q.question);
+  } else {
+    wrong = wrong.filter(w => w !== q.question);
+  }
+  saveWrong(wrong);
+}
+
+// === 交卷/结束 ===
+function submitExam() {
+  clearInterval(timerInterval);
+
+  if (isExam) {
+    let wrong = loadWrong();
+    questions.forEach((q, i) => {
+      const ans = userAnswers[i];
+      if (ans === null) {
+        if (!wrong.includes(q.question)) wrong.push(q.question);
+        return;
+      }
+      let correct;
+      if (Array.isArray(ans)) correct = ans.length === q.correctLetters.length && ans.every(l => q.correctLetters.includes(l));
+      else correct = ans === q.answer;
+      if (!correct && !wrong.includes(q.question)) wrong.push(q.question);
+      if (correct) wrong = wrong.filter(w => w !== q.question);
+    });
+    saveWrong(wrong);
+  }
+
+  let correct = 0, wrong = 0, unanswered = 0;
+  const wrongList = [];
+
+  questions.forEach((q, i) => {
+    const ans = userAnswers[i];
+    if (ans === null) { unanswered++; wrongList.push({...q, idx:i+1, yourAns:'未作答'}); return; }
+
+    let isCorrect;
+    if (Array.isArray(ans)) {
+      isCorrect = ans.length === q.correctLetters.length && ans.every(l => q.correctLetters.includes(l));
+    } else {
+      isCorrect = ans === q.answer;
+    }
+    if (isCorrect) correct++;
+    else {
+      wrong++;
+      const yourText = Array.isArray(ans) ? ans.join(', ') : ans;
+      wrongList.push({...q, idx:i+1, yourAns:yourText});
+    }
+  });
+
+  const total = questions.length;
+  const score = Math.round((correct / total) * 100);
+  const pass = score >= 60;
+
+  showPage('resultPage');
+
+  const catObj = getCategories().find(c => c.id === currentCategory);
+  const catName = catObj ? `「${catObj.name}」` : '';
+  const subObj = SUBJECTS.find(s => s.id === currentSubject);
+  const subName = currentSubject !== 'all' ? `${subObj.emoji}${subObj.name}` : '全部科目';
+
+  document.getElementById('resultTitle').textContent = isExam ? `${subName}${catName}模拟考试结果` : `${subName}${catName}练习完成！`;
+  document.getElementById('resultTitle').style.color = pass ? 'var(--success)' : 'var(--danger)';
+
+  const scoreEl = document.getElementById('scoreDisplay');
+  scoreEl.textContent = score + '分';
+  scoreEl.className = `score ${pass ? 'pass' : 'fail'}`;
+
+  const usedSec = Math.round((Date.now() - startTime) / 1000);
+  const usedMin = Math.floor(usedSec / 60);
+  const usedS = usedSec % 60;
+
+  document.getElementById('resultDetail').textContent = `共${total}题 | 正确${correct} | 错误${wrong} | 未答${unanswered} | 用时${usedMin}分${usedS}秒`;
+
+  document.getElementById('resultChart').innerHTML = `
+    <div class="bar-row"><div class="bar-label">正确</div><div class="bar-track"><div class="bar-fill green" style="width:${correct/total*100}%">${correct} (${Math.round(correct/total*100)}%)</div></div></div>
+    <div class="bar-row"><div class="bar-label">错误</div><div class="bar-track"><div class="bar-fill red" style="width:${wrong/total*100}%">${wrong}</div></div></div>
+    ${unanswered ? `<div class="bar-row"><div class="bar-label">未答</div><div class="bar-track"><div class="bar-fill yellow" style="width:${unanswered/total*100}%">${unanswered}</div></div></div>` : ''}
+  `;
+
+  document.getElementById('retryBtn').style.display = wrongList.length > 0 ? '' : 'none';
+
+  if (wrongList.length > 0) {
+    document.getElementById('wrongReview').classList.remove('hidden');
+    document.getElementById('wrongList').innerHTML = wrongList.slice(0, 30).map(w => `
+      <div class="wrong-item">
+        <div class="q-text">${w.idx}. ${w.question}</div>
+        <div class="your-ans">你的答案：${w.yourAns}</div>
+        <div class="right-ans">正确答案：${w.answer}</div>
+        ${w.explanation ? `<div class="exp">解析：${w.explanation}</div>` : ''}
+      </div>
+    `).join('') + (wrongList.length > 30 ? `<p style="text-align:center;color:var(--text3);margin-top:10px">仅显示前30道错题</p>` : '');
+  } else {
+    document.getElementById('wrongReview').classList.add('hidden');
+  }
+}
+
+function retryWrong() {
+  const wrongIds = loadWrong();
+  if (wrongIds.length === 0) { alert('暂无错题！'); return; }
+  questions = getSubjectQuestions().filter(q => wrongIds.includes(q.question));
+  questions = shuffle(questions);
+  currentIdx = 0;
+  userAnswers = new Array(questions.length).fill(null);
+  isExam = false;
+  startTime = Date.now();
+  showPage('examPage');
+  renderQuestion();
+  renderSheet();
+  updateNav();
+}
+
+function goHome() {
+  clearInterval(timerInterval);
+  showPage('homePage');
+  initHome();
+}
+
+// 初始化
+initHome();
+</script>
+</body>
+</html>

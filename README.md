@@ -52,4 +52,49 @@
 
 ---
 
-⭐ 如果觉得好用，欢迎 Star 支持！
+## English
+
+# Bank Practitioner Exam Prep
+
+> by Jincheng (working overtime on weekends) 🌈
+
+A pure frontend quiz app for China Banking Professional Certification — zero dependencies, open in browser and start practicing.
+
+## ✨ Features
+
+- **Three practice modes**: Sequential, Mock Exam, Random Practice
+- **Smart categorization**: By subject (Laws & Regulations / Personal Loans) + by year (2018-2025) + High-frequency + Sprint
+- **Intelligent ordering**: Sequential & Mock Exam auto-sort by Single → Multiple → True/False for better retention
+- **Question type filter**: Random Practice supports filtering by question type or focusing on wrong answers
+- **Wrong answer tracking**: Auto-record mistakes with dedicated review mode
+- **Answer sheet**: Grouped by question type for clear progress tracking
+- **Instant explanations**: Detailed analysis shown immediately after answering
+- **2024/2025 highlights**: Recent exam papers prominently marked for focused preparation
+
+## 📚 Question Bank
+
+| Subject | Questions | Source |
+|---------|-----------|--------|
+| Laws & Regulations | 1,320 | Collected online |
+| Personal Loans | 463 | Collected online |
+| Sprint Mock Exams | 230 | Collected online |
+| **Total** | **2,013** | |
+
+## 🚀 Try it Online
+
+👉 **[Start Practicing](https://iamjincheng2026.github.io/bank2025-exam/exam.html)**
+
+## 🔧 Tech Stack
+
+- Pure HTML + CSS + JavaScript, no framework dependencies
+- Separated data layer (exam_data.js)
+- Hosted on GitHub Pages
+- Mobile responsive design
+
+## 📝 Disclaimer
+
+All questions are collected from the internet for personal study purposes only.
+
+---
+
+⭐ If you find it helpful, please give it a Star!

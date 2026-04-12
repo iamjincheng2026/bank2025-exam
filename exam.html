@@ -389,15 +389,22 @@ body {
 
   <!-- 模式选择 -->
   <div class="mode-cards">
-    <div class="mode-card">
+    <div class="mode-card" style="cursor:default">
       <div class="icon">🎲</div>
       <div class="info">
         <h3>随机练习</h3>
         <p id="randomDesc">从题库中随机抽取题目，答完即看解析</p>
         <div class="cat-badge" id="randomBadge" style="display:none"></div>
       </div>
-      <div class="config">
-        <select id="randomCount">
+      <div class="config" style="flex-direction:column;gap:6px;align-items:flex-end">
+        <select id="randomType" style="width:100px;padding:5px 8px;border:1px solid #ddd;border-radius:8px;font-size:13px;background:#fff;">
+          <option value="all">全部题型</option>
+          <option value="single">仅单选</option>
+          <option value="multi">仅多选</option>
+          <option value="judge">仅判断</option>
+          <option value="wrong">错题重练</option>
+        </select>
+        <select id="randomCount" style="width:100px;padding:5px 8px;border:1px solid #ddd;border-radius:8px;font-size:13px;background:#fff;">
           <option value="20">20题</option>
           <option value="30" selected>30题</option>
           <option value="50">50题</option>
@@ -697,8 +704,21 @@ function startExam(m) {
   if (pool.length === 0) { alert('该分类暂无题目！'); return; }
 
   if (m === 'random') {
-    const count = parseInt(document.getElementById('randomCount').value);
-    questions = shuffle(pool).slice(0, count);
+    const typeFilter = document.getElementById('randomType').value;
+    let filteredPool;
+    if (typeFilter === 'single') filteredPool = pool.filter(q => q.type === '单项选择题');
+    else if (typeFilter === 'multi') filteredPool = pool.filter(q => q.type === '多项选择题');
+    else if (typeFilter === 'judge') filteredPool = pool.filter(q => q.type === '判断题');
+    else if (typeFilter === 'wrong') {
+      const wrongIds = loadWrong();
+      if (wrongIds.length === 0) { alert('暂无错题！'); return; }
+      filteredPool = pool.filter(q => wrongIds.includes(q.question));
+    } else {
+      filteredPool = pool;
+    }
+    if (filteredPool.length === 0) { alert('该类型暂无题目！'); return; }
+    const count = Math.min(parseInt(document.getElementById('randomCount').value), filteredPool.length);
+    questions = shuffle(filteredPool).slice(0, count);
     isExam = false;
   } else if (m === 'sequential') {
     // 顺序刷题：按类型排序，先单选→多选→判断

@@ -450,7 +450,7 @@ body {
 <div class="home" id="homePage">
   <h1>老城哥 <svg viewBox="0 0 24 24" width="16" height="16" style="vertical-align:middle;margin:0 1px;fill:none;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;-webkit-text-fill-color:transparent;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg><span class="avatar-icon" style="background:linear-gradient(135deg,var(--primary),var(--warning));-webkit-background-clip:text;-webkit-text-fill-color:transparent;display:inline-flex;align-items:center;margin-left:1px;margin-right:6px;vertical-align:middle;"><svg viewBox="0 0 100 100" width="30" height="30"><circle cx="50" cy="35" r="18" fill="none" stroke="currentColor" stroke-width="2.5"/><path d="M32 30 Q32 18 50 16 Q68 18 68 30" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><circle cx="43" cy="33" r="1.8" fill="currentColor"/><circle cx="57" cy="33" r="1.8" fill="currentColor"/><path d="M44 40 Q50 45 56 40" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="50" y1="53" x2="50" y2="60" stroke="currentColor" stroke-width="2.5"/><path d="M47 60 L50 72 L53 60" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M30 95 L35 60 L47 65 L50 72 L53 65 L65 60 L70 95" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M45 58 L50 63 L55 58" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span> 加班制作 · 银行从业刷题</h1>
   <p class="sub">初级 | 法律法规 + 个人贷款 | 2018-2025年真题 | 去重后题库</p>
-  <p class="author">by <span style="font-weight:700;background:linear-gradient(90deg,#e74c3c,#f39c12,#2ecc71,#3498db,#9b59b6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">金城（38岁，两个女儿）</span> · v2.10 · 20260412</p>
+  <p class="author">by <span style="font-weight:700;background:linear-gradient(90deg,#e74c3c,#f39c12,#2ecc71,#3498db,#9b59b6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">金城（38岁，两个女儿）</span> · v2.11 · 20260412</p>
 
   <!-- 科目切换 -->
   <div class="subject-tabs" id="subjectTabs"></div>
@@ -919,7 +919,8 @@ function renderQuestion() {
   const optDiv = document.getElementById('options');
   const isMulti = q.type === '多项选择题';
   const answered = userAnswers[currentIdx];
-  const showResult = !isExam && answered !== null;
+  const confirmed = isMulti && multiConfirmed[currentIdx];
+  const showResult = (!isExam && !isMulti && answered !== null) || confirmed;
 
   optDiv.innerHTML = q.options.map(opt => {
     let cls = 'option';
@@ -933,7 +934,8 @@ function renderQuestion() {
       }
     }
 
-    return `<div class="${cls}" onclick="selectOption('${opt.label}')" data-label="${opt.label}">
+    const clickHandler = showResult ? '' : `onclick="selectOption('${opt.label}')"`;
+    return `<div class="${cls}" ${clickHandler} data-label="${opt.label}">
       <span class="label">${opt.label}</span>
       <span>${opt.text}</span>
     </div>`;
@@ -960,12 +962,17 @@ function renderQuestion() {
   });
 }
 
+// === 多选题已确认状态 ===
+let multiConfirmed = {};
+
 // === 选择选项 ===
 function selectOption(label) {
   const q = questions[currentIdx];
   const isMulti = q.type === '多项选择题';
 
-  if (userAnswers[currentIdx] !== null && !isExam) return;
+  // 已确认的题目不能修改
+  if (multiConfirmed[currentIdx]) return;
+  if (!isMulti && userAnswers[currentIdx] !== null && !isExam) return;
 
   if (isMulti) {
     let arr = Array.isArray(userAnswers[currentIdx]) ? [...userAnswers[currentIdx]] : [];
@@ -973,25 +980,83 @@ function selectOption(label) {
     else arr.push(label);
     arr.sort();
     userAnswers[currentIdx] = arr.length > 0 ? arr : null;
+    // 多选题不立即判对错，只更新选中状态和确认按钮
+    renderOptionsOnly();
+    updateConfirmBtn();
   } else {
     userAnswers[currentIdx] = label;
-  }
-
-  if (!isExam) {
-    renderQuestion();
-    recordWrong();
-  } else {
-    renderQuestion();
+    if (!isExam) {
+      renderQuestion();
+      recordWrong();
+    } else {
+      renderQuestion();
+    }
   }
 
   updateNav();
   updateSheetDot(currentIdx);
 }
 
+// 只更新选项样式（不刷新整题，多选题选择时用）
+function renderOptionsOnly() {
+  const q = questions[currentIdx];
+  const optDiv = document.getElementById('options');
+  const answered = userAnswers[currentIdx];
+  const isMulti = q.type === '多项选择题';
+  const confirmed = isMulti && multiConfirmed[currentIdx];
+
+  optDiv.innerHTML = q.options.map(opt => {
+    let cls = 'option';
+    if (isMulti && Array.isArray(answered) && answered.includes(opt.label)) cls += ' selected';
+    else if (!isMulti && answered === opt.label) cls += ' selected';
+
+    if (confirmed || (!isMulti && !isExam && answered !== null)) {
+      if (q.correctLetters.includes(opt.label)) cls += ' correct';
+      if (answered === opt.label || (Array.isArray(answered) && answered.includes(opt.label))) {
+        if (!q.correctLetters.includes(opt.label)) cls += ' wrong';
+      }
+    }
+
+    const clickHandler = (confirmed || (!isMulti && !isExam && answered !== null)) ? '' : `onclick="selectOption('${opt.label}')"`;
+    return `<div class="${cls}" ${clickHandler} data-label="${opt.label}">
+      <span class="label">${opt.label}</span>
+      <span>${opt.text}</span>
+    </div>`;
+  }).join('');
+}
+
+// 更新确认按钮显示
+function updateConfirmBtn() {
+  const q = questions[currentIdx];
+  const isMulti = q.type === '多项选择题';
+  const answered = userAnswers[currentIdx];
+  const btn = document.getElementById('confirmBtn');
+
+  if (isMulti && !multiConfirmed[currentIdx] && !isExam) {
+    if (Array.isArray(answered) && answered.length >= 2) {
+      btn.style.display = '';
+      btn.textContent = '✅ 确认提交（已选' + answered.length + '项）';
+    } else if (Array.isArray(answered) && answered.length === 1) {
+      btn.style.display = '';
+      btn.textContent = '✅ 确认提交（已选1项）';
+      btn.disabled = false;
+    } else {
+      btn.style.display = 'none';
+    }
+  } else {
+    btn.style.display = 'none';
+  }
+}
+
 function confirmAnswer() {
+  const q = questions[currentIdx];
+  if (q.type === '多项选择题') {
+    multiConfirmed[currentIdx] = true;
+  }
   renderQuestion();
   recordWrong();
   updateSheetDot(currentIdx);
+  updateConfirmBtn();
 }
 
 // === 导航 ===
@@ -1010,19 +1075,20 @@ function updateNav() {
   const total = questions.length;
   document.getElementById('prevBtn').disabled = currentIdx === 0;
   document.getElementById('nextBtn').style.display = currentIdx < total - 1 ? '' : 'none';
-  document.getElementById('submitBtn').style.display = currentIdx === total - 1 ? '' : 'none';
 
-  if (isExam) {
-    const q = questions[currentIdx];
-    if (q.type === '多项选择题' && userAnswers[currentIdx] !== null) {
-      document.getElementById('confirmBtn').style.display = '';
-    } else {
-      document.getElementById('confirmBtn').style.display = 'none';
-    }
+  const q = questions[currentIdx];
+  const isMulti = q.type === '多项选择题';
+  const confirmed = isMulti && multiConfirmed[currentIdx];
+
+  // 确认按钮：多选题未确认时显示
+  if (isMulti && !confirmed) {
+    updateConfirmBtn();
   } else {
     document.getElementById('confirmBtn').style.display = 'none';
-    document.getElementById('submitBtn').style.display = currentIdx === total - 1 ? '' : 'none';
   }
+
+  // 交卷按钮：最后一题才显示
+  document.getElementById('submitBtn').style.display = currentIdx === total - 1 ? '' : 'none';
 
   if (!isExam) document.getElementById('timer').textContent = '🎯 练习模式';
 }

@@ -23,8 +23,7 @@ A pure frontend quiz app for China Banking Professional Certification — zero d
 | Subject | Questions | Source |
 |---------|-----------|--------|
 | Laws & Regulations | 1,320 | Collected online |
-| Personal Loans | 463 | Collected online |
-| Sprint Mock Exams | 230 | Collected online |
+| Personal Loans | 693 | Collected online (incl. Sprint 230) |
 | **Total** | **2,013** | |
 
 ## 🚀 Try it Online
@@ -69,8 +68,7 @@ All questions are collected from the internet for personal study purposes only.
 | 科目 | 题数 | 来源 |
 |------|------|------|
 | 法律法规 | 1,320题 | 网上搜集 |
-| 个人贷款 | 463题 | 网上搜集 |
-| 考前冲刺 | 230题 | 网上搜集 |
+| 个人贷款 | 693题 | 网上搜集（内含冲刺230题） |
 | **合计** | **2,013题** | |
 
 ## 🚀 在线使用

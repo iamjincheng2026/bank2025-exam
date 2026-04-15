@@ -47,7 +47,7 @@ All questions are collected from the internet for personal study purposes only.
 
 # 老城哥加班制作 · 银行从业刷题
 
-> by 金城（38岁，两个女儿）
+> 老城哥加班制作
 
 一个纯前端的银行从业资格考试刷题小程序，零依赖，浏览器直接打开即用。
 

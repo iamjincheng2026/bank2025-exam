@@ -2,7 +2,7 @@
 
 # Bank Practitioner Exam Prep
 
-> by Jincheng (working overtime on weekends)
+> by 金城
 
 A pure frontend quiz app for China Banking Professional Certification — zero dependencies, open in browser and start practicing.
 

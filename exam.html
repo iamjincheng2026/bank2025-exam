@@ -388,7 +388,7 @@ body {
 <!-- 首页 -->
 <div class="splash" id="splashPage" onclick="enterApp()">
   <h2>银行从业资格考试</h2>
-  <div class="exam-date">2026年10月24日（星期六）</div>
+  <div class="exam-date">2026年6月13日（星期六）</div>
   <div class="countdown" id="countdown">
     <div class="countdown-item"><div class="countdown-num" id="cdDays">--</div><div class="countdown-label">天</div></div>
     <div class="countdown-item"><div class="countdown-num" id="cdHours">--</div><div class="countdown-label">时</div></div>
@@ -1358,7 +1358,7 @@ function goHome() {
 }
 
 // === 倒计时 ===
-const examDate = new Date('2026-10-24T09:00:00+08:00').getTime();
+const examDate = new Date('2026-06-13T09:00:00+08:00').getTime();
 function updateCountdown() {
   const now = Date.now();
   let diff = examDate - now;

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>老城哥加班制作 · 银行从业刷题</title>
+<title>金城加班制作 · 银行从业刷题</title>
 <script>document.write('<script src="exam_data.js?v=3.0"><\/script>');</script>
 <style>
 /* === 主题变量 === */
@@ -33,7 +33,7 @@
   --bg: #f5f6fa;
   --bg2: #ffffff;
   --card: #ffffff;
-  --border: #dcdde1;
+  --border: #dcdcdc;
   --text: #2f3640;
   --text2: #718093;
   --text3: #a4b0be;
@@ -395,7 +395,7 @@ body {
     <div class="countdown-item"><div class="countdown-num" id="cdMins">--</div><div class="countdown-label">分</div></div>
     <div class="countdown-item"><div class="countdown-num" id="cdSecs">--</div><div class="countdown-label">秒</div></div>
   </div>
-  <div class="encourage" id="splashMsg">💪 认真刷题，老城哥这个小程序<br>优化了 N 多次，真心吐血，这次一定能考过的！加油！</div>
+  <div class="encourage" id="splashMsg">💪 认真刷题，金城这个小程序<br>优化了 N 多次，真心吐血，这次一定能考过的！加油！</div>
   <div class="enter-hint">点击任意位置进入</div>
 </div>
 
@@ -607,7 +607,7 @@ let sessionCorrect = 0; // 本次练习答对数
 let sessionTotal = 0;   // 本次练习已答题数
 
 // === localStorage 工具 ===
-function lsGet(key, def) { try { const v = localStorage.getItem(key); return v !== null ? JSON.parse(v) : def; } catch { return def; } }
+function lsGet(key, def) { try { const v = localStorage.getItem(key); return v !== null ? JSON.parse(v) : def; } catch(e) { return def; } }
 function lsSet(key, val) { localStorage.setItem(key, JSON.stringify(val)); }
 
 // === 错题系统（升级版：答对2次才移除） ===

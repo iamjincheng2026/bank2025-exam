@@ -388,7 +388,7 @@ body {
 <!-- 首页 -->
 <div class="splash" id="splashPage" onclick="enterApp()">
   <h2>银行从业资格考试</h2>
-  <div class="exam-date">2026年6月13日（星期六）</div>
+  <div class="exam-date">2026年10月24日（星期六）</div>
   <div class="countdown" id="countdown">
     <div class="countdown-item"><div class="countdown-num" id="cdDays">--</div><div class="countdown-label">天</div></div>
     <div class="countdown-item"><div class="countdown-num" id="cdHours">--</div><div class="countdown-label">时</div></div>
@@ -402,7 +402,7 @@ body {
 <div class="home hidden" id="homePage">
   <h1>老城哥 <svg viewBox="0 0 24 24" width="16" height="16" style="vertical-align:middle;margin:0 1px;fill:none;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;-webkit-text-fill-color:transparent;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg><span style="background:linear-gradient(135deg,var(--primary),var(--warning));-webkit-background-clip:text;-webkit-text-fill-color:transparent;display:inline-flex;align-items:center;margin-left:1px;margin-right:6px;vertical-align:middle;"><svg viewBox="0 0 100 100" width="30" height="30"><circle cx="50" cy="35" r="18" fill="none" stroke="currentColor" stroke-width="2.5"/><path d="M32 30 Q32 18 50 16 Q68 18 68 30" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><circle cx="43" cy="33" r="1.8" fill="currentColor"/><circle cx="57" cy="33" r="1.8" fill="currentColor"/><path d="M44 40 Q50 45 56 40" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="50" y1="53" x2="50" y2="60" stroke="currentColor" stroke-width="2.5"/><path d="M47 60 L50 72 L53 60" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M30 95 L35 60 L47 65 L50 72 L53 65 L65 60 L70 95" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M45 58 L50 63 L55 58" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span> 加班制作 · 银行从业刷题</h1>
   <p class="sub">初级 | 法律法规 + 个人贷款 | 2018-2025年真题 | 去重后题库</p>
-  <p class="author">by <span style="font-weight:700;background:linear-gradient(90deg,#e74c3c,#f39c12,#2ecc71,#3498db,#9b59b6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">bank2025-exam</span> · v3.04 · 20260418</p>
+  <p class="author">by <span style="font-weight:700;background:linear-gradient(90deg,#e74c3c,#f39c12,#2ecc71,#3498db,#9b59b6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">金城</span> · v3.05 · 20260516</p>
 
   <!-- 刷题统计 -->
   <div class="study-stats" id="studyStats">
@@ -720,6 +720,7 @@ function getExamSaveKey() { return 'bank_exam_save_' + currentSubject + '_' + cu
 function saveExamProgress() {
   if (!isExam) return;
   lsSet(getExamSaveKey(), {
+    ts: Date.now(),
     questions: questions.map(q => getQId(q, 0)),
     currentIdx, userAnswers, timeLeft, startTime, multiConfirmed, flagged,
     catInfo: document.getElementById('catInfo').textContent,
@@ -730,7 +731,7 @@ function loadExamProgress() {
   const save = lsGet(getExamSaveKey(), null);
   if (!save) return null;
   // 检查是否过期（24小时）
-  if (Date.now() - (save.ts || save.startTime || 0) > 86400000) { localStorage.removeItem(getExamSaveKey()); return null; }
+  if (Date.now() - (save.ts || save.startTime || Date.now()) > 86400000) { localStorage.removeItem(getExamSaveKey()); return null; }
   return save;
 }
 function clearExamSave() { localStorage.removeItem(getExamSaveKey()); }
@@ -751,7 +752,7 @@ function getQuestionsByCategory(catId) {
   let pool = getSubjectQuestions();
   if (catId === 'all') return pool;
   if (catId === 'freq') return pool.filter(q => q.categories && q.categories.includes('高频'));
-  if (catId === 'recent') return pool.filter(q => q.years && q.years.some(y => y === '2025' || y === '2024'));
+  if (catId === 'recent') return pool.filter(q => q.categories && q.categories.some(c => c === '2025' || c === '2024'));
   if (catId === 'sprint') return pool.filter(q => q.categories && q.categories.includes('sprint'));
   return pool.filter(q => q.categories && q.categories.includes(catId));
 }
@@ -1052,14 +1053,15 @@ function renderQuestion() {
   const subjEl = document.getElementById('qSubject');
   subjEl.style.display = 'none';
 
-  // 年份
+  // 年份标签（从 categories 中提取年份）
   const yearsEl = document.getElementById('qYears');
-  if (q.years && q.years.length > 0) { yearsEl.style.display=''; yearsEl.textContent=q.years.join(' / '); }
+  const yearTags = (q.categories || []).filter(c => /^\d{4}$/.test(c));
+  if (yearTags.length > 0) { yearsEl.style.display=''; yearsEl.textContent=yearTags.join(' / '); }
   else { yearsEl.style.display='none'; }
 
   // 高频
   const freqEl = document.getElementById('qFreqBadge');
-  if (q.categories && q.categories.includes('高频')) { freqEl.style.display=''; freqEl.textContent=`🔥 出现${q.years.length}次`; }
+  if (q.categories && q.categories.includes('高频')) { freqEl.style.display=''; freqEl.textContent=`🔥 出现${yearTags.length}次`; }
   else { freqEl.style.display='none'; }
 
   // 收藏按钮
@@ -1118,7 +1120,7 @@ function renderQuestion() {
   document.getElementById('questionCard').classList.add('fade-in');
 
   // 答题卡高亮
-  document.querySelectorAll('.sheet-dot').forEach((d, i) => { d.classList.toggle('current', i === currentIdx); });
+  document.querySelectorAll('.sheet-dot').forEach(d => { d.classList.toggle('current', parseInt(d.dataset.idx) === currentIdx); });
 }
 
 // === 选择选项 ===
@@ -1214,14 +1216,14 @@ function renderSheet() {
     if (userAnswers[i] !== null) cls += ' answered';
     if (i === currentIdx) cls += ' current';
     if (flagged[i]) cls += ' flagged';
-    html += `<div class="${cls}" onclick="jumpTo(${i})">${i+1}</div>`;
+    html += `<div class="${cls}" data-idx="${i}" onclick="jumpTo(${i})">${i+1}</div>`;
   });
   if (lastType !== null) html += '</div>';
   grid.innerHTML = html;
 }
 function updateSheetDot(idx) {
-  const dots = document.querySelectorAll('.sheet-dot');
-  if (dots[idx]) { dots[idx].classList.add('answered'); dots[idx].classList.add('current'); }
+  const dot = document.querySelector(`.sheet-dot[data-idx="${idx}"]`);
+  if (dot) { dot.classList.add('answered'); dot.classList.add('current'); }
 }
 function toggleSheet() { document.getElementById('answerSheet').classList.toggle('show'); }
 function jumpTo(idx) { currentIdx = idx; renderQuestion(); updateNav(); }
@@ -1356,7 +1358,7 @@ function goHome() {
 }
 
 // === 倒计时 ===
-const examDate = new Date('2026-06-13T09:00:00+08:00').getTime();
+const examDate = new Date('2026-10-24T09:00:00+08:00').getTime();
 function updateCountdown() {
   const now = Date.now();
   let diff = examDate - now;
@@ -1415,6 +1417,11 @@ if (typeof EXAM_DATA !== 'undefined') {
   document.getElementById('loadingScreen').style.display = 'none';
   document.getElementById('homePage').classList.remove('hidden');
   initHome();
+}
+
+// === Service Worker 离线缓存 ===
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js').catch(() => {});
 }
 </script>
 </body>

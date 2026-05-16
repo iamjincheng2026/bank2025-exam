@@ -17,6 +17,7 @@ A pure frontend quiz app for China Banking Professional Certification — zero d
 - **Answer sheet**: Grouped by question type for clear progress tracking
 - **Instant explanations**: Detailed analysis shown immediately after answering
 - **2024/2025 highlights**: Recent exam papers prominently marked for focused preparation
+- **Offline support**: Service Worker caching for offline use
 
 ## 📚 Question Bank
 
@@ -36,6 +37,7 @@ A pure frontend quiz app for China Banking Professional Certification — zero d
 - Separated data layer (exam_data.js)
 - Hosted on GitHub Pages
 - Mobile responsive design
+- Service Worker offline caching
 
 ## 📝 Disclaimer
 
@@ -47,7 +49,7 @@ All questions are collected from the internet for personal study purposes only.
 
 # 老城哥加班制作 · 银行从业刷题
 
-> 老城哥加班制作
+> by 金城
 
 一个纯前端的银行从业资格考试刷题小程序，零依赖，浏览器直接打开即用。
 
@@ -62,6 +64,7 @@ All questions are collected from the internet for personal study purposes only.
 - **答题卡**：按题型分组显示，做题进度一目了然
 - **实时解析**：答完即看详细解析
 - **2024/2025重点标记**：近两年真题醒目标注，备考更有针对性
+- **离线缓存**：Service Worker 支持，断网也能刷题
 
 ## 📚 题库规模
 
@@ -81,14 +84,16 @@ All questions are collected from the internet for personal study purposes only.
 - 数据与视图分离（exam_data.js）
 - GitHub Pages 静态托管
 - 支持移动端自适应
+- Service Worker 离线缓存
 
 ## 📋 版本记录
 
 | 版本 | 日期 | 更新内容 |
 |------|------|----------|
-| **v3.04** | 20260418 | 数据修复：499题多选答案格式统一、24题标签规范化、27题补充解析占位符 |
-| **v3.03** | 20260417 | 修复顺序/随机练习退出后刷题统计不更新的BUG，版本记录更新 |
-| **v3.01** | 20260414 | 双科目界面完整上线，法律法规+个人贷款均可正常刷题 |
+| **v3.05** | 20260516 | 修复考试保存过期判断BUG、答题卡索引错位风险；署名改为"金城"；清理4个冗余文件；合并categories/years字段；原始数据移入data/目录；新增Service Worker离线缓存；倒计时更新为10月24日 |
+| v3.04 | 20260418 | 数据修复：499题多选答案格式统一、24题标签规范化、27题补充解析占位符 |
+| v3.03 | 20260417 | 修复顺序/随机练习退出后刷题统计不更新的BUG，版本记录更新 |
+| v3.01 | 20260414 | 双科目界面完整上线，法律法规+个人贷款均可正常刷题 |
 | v2.10 | 20260412 | 移除"全部科目"，精简为法律法规/个人贷款双科目 |
 | v2.09 | 20260412 | 倒计时手机适配优化，鼓励语分两行 |
 | v2.0 | 20260412 | 作者署名简化为"金城" |
